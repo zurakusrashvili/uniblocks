@@ -3,12 +3,16 @@ import tippy from "tippy.js";
 
 import CommandsList from "./CommandsList.vue";
 
-export default function (blockTools) {
+export default function (basicBlocks, advancedBlocks) {
   return {
     items: ({ query }) => {
-      return blockTools.filter((item) =>
+      const filteredBasicBlocks = basicBlocks.filter((item) =>
         item.title.toLowerCase().startsWith(query.toLowerCase())
       );
+      const filteredAdvancedBlocks = advancedBlocks.filter((item) =>
+        item.title.toLowerCase().startsWith(query.toLowerCase())
+      );
+      return { basicBlocks: filteredBasicBlocks, advancedBlocks: filteredAdvancedBlocks };
     },
 
     render: () => {
@@ -18,10 +22,11 @@ export default function (blockTools) {
       return {
         onStart: (props) => {
           component = new VueRenderer(CommandsList, {
-            // using vue 2:
-            // parent: this,
-            // propsData: props,
-            props,
+            props: {
+              ...props,
+              basicBlocks: props.items.basicBlocks,
+              advancedBlocks: props.items.advancedBlocks,
+            },
             editor: props.editor,
           });
 
@@ -41,7 +46,11 @@ export default function (blockTools) {
         },
 
         onUpdate(props) {
-          component.updateProps(props);
+          component.updateProps({
+            ...props,
+            basicBlocks: props.items.basicBlocks,
+            advancedBlocks: props.items.advancedBlocks,
+          });
 
           if (!props.clientRect) {
             return;

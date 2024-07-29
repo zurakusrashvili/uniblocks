@@ -32,20 +32,15 @@ function mergeDeep(target, source) {
   }
   return target;
 }
-
 export const mergeArrays = function (target, source) {
-  source.forEach((sourceItem, index) => {
-    if (
-      !target ||
-      !target.find((targetItem) => targetItem.name == sourceItem.name)
-    ) {
+  source.forEach((sourceItem) => {
+    const existingItem = target.find((targetItem) => targetItem.name === sourceItem.name);
+    if (!existingItem) {
       target.push(sourceItem);
     } else {
-      mergeDeep(
-        target.find((targetItem) => targetItem.name == sourceItem.name),
-        sourceItem
-      );
+      mergeDeep(existingItem, sourceItem);
     }
   });
   return target;
 };
+

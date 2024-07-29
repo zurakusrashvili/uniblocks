@@ -87,7 +87,8 @@ export default {
   background-color: #f4f4f4;
   padding: 2;
   border-right: 1px solid #ddd;
-  position: relative;
+  position: absolute;
+  top:0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

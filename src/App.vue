@@ -3,9 +3,6 @@
     <TopMenu />
 
     <div class="lg:grid lg:grid-cols-3">
-      <div class="absolute h-screen">
-        <BlockSidebar />
-      </div>
       <div class="h-screen relative col-span-3 h-screen overflow-y-auto">
         <!-- <div class="flex flex-row gap-4 items-center fixed lg:absolute top-4 z-20 right-4">
           <button @click.prevent="editable = !editable" v-text="editable ? 'Editable' : 'Read only'"
@@ -98,23 +95,23 @@ export default {
             },
           ],
         },
-        {
-          name: "vueComponent",
-          title: "Sample Vue component",
-          icon: '<svg  width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32"><path d="M24.3,4h-4.8L16,9.6L13,4H2l14,24L30,4L24.3,4z M5.5,6h3.4L16,18.4L23.1,6h3.4L16,24L5.5,6z"/></svg>',
-          insertCommand: ({ editor, range }) => {
-            editor
-              .chain()
-              .focus()
-              .deleteRange(range)
-              .insertContent(
-                '<div><vue-component count="0"></vue-component></div>'
-              )
-              .run();
-          },
-          hasInlineTools: false,
-          isActiveTest: (editor) => editor.isActive("vueComponent"),
-        },
+        // {
+        //   name: "vueComponent",
+        //   title: "Sample Vue component",
+        //   icon: '<svg  width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32"><path d="M24.3,4h-4.8L16,9.6L13,4H2l14,24L30,4L24.3,4z M5.5,6h3.4L16,18.4L23.1,6h3.4L16,24L5.5,6z"/></svg>',
+        //   insertCommand: ({ editor, range }) => {
+        //     editor
+        //       .chain()
+        //       .focus()
+        //       .deleteRange(range)
+        //       .insertContent(
+        //         '<div><vue-component count="0"></vue-component></div>'
+        //       )
+        //       .run();
+        //   },
+        //   hasInlineTools: false,
+        //   isActiveTest: (editor) => editor.isActive("vueComponent"),
+        // },
       ],
       content: sampleContent,
     };
