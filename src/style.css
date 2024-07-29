@@ -1,0 +1,170 @@
+@tailwind components;
+@tailwind utilities;
+
+.uniblocks [data-variant="large"] {
+  @apply text-2xl;
+}
+
+.uniblocks [data-tooltip] {
+  position: relative;
+}
+
+.uniblocks [data-tooltip]:hover::after {
+  @apply translate-y-0 opacity-100;
+}
+
+.uniblocks [data-tooltip]::after {
+  content: attr(data-tooltip);
+  width: max-content;
+  @apply max-w-[8em] transition text-xs px-1.5 py-0.5 text-white bg-black rounded-sm absolute bottom-[calc(100%+0.5rem)] md:bottom-auto md:top-[calc(100%+1rem)] left-1/2 -translate-x-1/2 translate-y-1 opacity-0  pointer-events-none;
+}
+
+.uniblocks [disabled] {
+  @apply text-gray-300 cursor-default;
+}
+
+.uniblocks .ProseMirror > * {
+  @apply max-w-2xl mx-auto max-sm:px-4;
+}
+
+.uniblocks [data-block-width="wide"] {
+  @apply max-w-4xl  !important;
+}
+
+.uniblocks [data-block-width="full"] {
+  @apply max-w-none px-0 !important;
+}
+
+.uniblocks .hide-empty:empty {
+  display: none !important;
+}
+
+.uniblocks .ProseMirror:focus-visible {
+  outline: none;
+}
+
+.uniblocks .ProseMirror > *:first-child {
+  margin-top: 0;
+}
+
+.uniblocks .ProseMirror-gapcursor {
+  @apply mx-auto mt-6 block relative !important;
+}
+
+.uniblocks .prosemirror-dropcursor-block {
+  animation: scaleIn 0.3s ease-out forwards;
+  transform: scale(0);
+  @apply bg-slate-400 h-1 rounded-full !important;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.editor-node-tools {
+  @apply absolute mt-1.5 h-4 text-slate-500 hover:before:duration-500  before:scale-x-0 hover:before:delay-500 after:content-["+"] hover:before:transition hover:after:duration-500 hover:after:delay-500 hover:after:transition after:scale-0 hover:after:scale-100 hover:before:scale-x-100  before:block before:absolute before:h-0.5 before:top-1/2 before:-translate-y-1/2 before:left-0 before:right-0 before:bg-slate-200 text-sm leading-none after:h-5 after:w-5 after:absolute after:rounded after:block after:bg-white after:border-slate-200  after:border-2 after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2;
+}
+
+.uniblocks .ProseMirror-gapcursor:after {
+  @apply block relative border-t-0 border-l h-6 border-black !important;
+}
+^ .uniblocks .ProseMirror table p {
+  @apply my-0;
+}
+
+.uniblocks .ProseMirror table p + p {
+  @apply mt-2;
+}
+
+.uniblocks blockquote .ProseMirror-trailingBreak {
+  display: none;
+}
+
+.uniblocks .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+.uniblocks .ProseMirror-selectednode {
+  outline: 2px solid lightblue;
+}
+
+.uniblocks .ProseMirror p.is-empty::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.uniblocks .ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.uniblocks .ProseMirror td,
+.uniblocks .ProseMirror th {
+  min-width: 1em;
+  border: 1px solid #ced4da;
+  padding: 0.2rem 0.5rem;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.uniblocks .ProseMirror td > *,
+.uniblocks .ProseMirror th > * {
+  margin-bottom: 0;
+}
+
+/* .ProseMirror th {
+  font-weight: bold;
+  text-align: left;
+  @apply bg-slate-50;
+} */
+
+.uniblocks .ProseMirror .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(200, 200, 255, 0.4);
+  pointer-events: none;
+}
+
+.uniblocks .ProseMirror table p {
+  margin: 0;
+}
+
+.uniblocks .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: #adf;
+  pointer-events: none;
+}
+
+.uniblocks .tableWrapper {
+  overflow-x: auto;
+}
+
+.uniblocks .resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
