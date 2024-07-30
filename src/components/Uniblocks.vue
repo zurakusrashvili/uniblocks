@@ -1,10 +1,7 @@
 <template>
   <div class="uniblocks">
     <bubble-menu v-if="editor && tableRowTools" :editor="editor" pluginKey="tableRowMenu" :should-show="tableIsActive"
-      :tippy-options="{
-      placement: 'left',
-      getReferenceClientRect: getTableRowMenuCoords,
-    }">
+    :tippy-options="getBubbleMenuOptions">
       <menu-item>
         <menu-button title="Row tools" class="rounded-full text-slate-400 hover:text-slate-800"
           :content="moreIconRound" />
@@ -17,10 +14,7 @@
     </bubble-menu>
 
     <bubble-menu v-if="editor && tableColumnTools" :editor="editor" pluginKey="tableColumnMenu"
-      :should-show="tableIsActive" :tippy-options="{
-      placement: 'bottom',
-      getReferenceClientRect: getTableColumnMenuCoords,
-    }">
+      :should-show="tableIsActive" :tippy-options="getBubbleMenuOptions">
       <menu-item>
         <menu-button title="Column tools" :content="moreIconRound"
           class="rounded-full text-slate-400 hover:text-slate-800" />
@@ -36,18 +30,7 @@
       class="text-sm bg-white max-w-screen flex divide-x max-w-full divide-slate-400 flex-row border-slate-400 md:rounded border-t md:border"
       :editor="editor" :class="{
       'mouse:pointer-events-none mouse:opacity-0': isTyping,
-    }" :tippy-options="{
-      maxWidth: 'none',
-      placement: 'top-start',
-      getReferenceClientRect: getMenuCoords,
-      onCreate: (instance) =>
-        instance.popper.classList.add(
-          'max-md:!sticky',
-          'max-md:!bottom-0',
-          'max-md:!top-auto',
-          'max-md:!transform-none'
-        ),
-    }">
+    }" :tippy-options="getBubbleMenuOptions">
       <div class="flex flex-row">
         <button @click.prevent @mousedown="startDragging($event)" @mouseup="
       draggedNodePosition = false;
@@ -145,21 +128,22 @@
       </div>
     </bubble-menu>
 
-    <BlockSidebar />
+      <BlockSidebar :blocks="blocks" :editor="editor" @select-block="selectBlock" />
 
     <editor-content :class="editorClass ?? 'prose'" @keydown="isTyping = true" @keyup.esc="isTyping = false"
       ref="editor" :editor="editor" />
   </div>
 
-    <button class="log-icon" @click="logEditorValue">
-      <i class="fas fa-download"></i>
-    </button>
+  <button class="log-icon" @click="logEditorValue">
+    <i class="fas fa-download"></i>
+  </button>
 </template>
 
 <script>
 import MenuButton from "@/components/MenuButton.vue";
 import MenuItem from "@/components/MenuItem.vue";
 import MenuDropdownButton from "@/components/MenuDropdownButton.vue";
+import BlockSidebar from "@/components/BlockSidebar.vue";
 
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3";
 import StarterKit from "@tiptap/starter-kit";
@@ -192,7 +176,6 @@ import { Youtube } from "../extensions/youtube";
 import { TrailingNode } from "../extensions/trailing-node";
 import { InsertBetween } from "../extensions/insert-between";
 import Variants from "../extensions/variants";
-import BlockSidebar from '../components/BlockSidebar.vue'
 
 import Commands from "./commands";
 import suggestion from "./suggestion";
@@ -204,6 +187,15 @@ import { tableRowTools, tableColumnTools } from "../tools/table-tools";
 
 
 export default {
+  components: {
+    BubbleMenu,
+    EditorContent,
+    MenuButton,
+    MenuItem,
+    MenuDropdownButton,
+    BlockSidebar
+  },
+
   props: {
     modelValue: {},
     editable: {
@@ -253,15 +245,6 @@ export default {
     },
   },
 
-  components: {
-    BubbleMenu,
-    EditorContent,
-    MenuButton,
-    MenuItem,
-    MenuDropdownButton,
-    BlockSidebar
-  },
-
   data() {
     const { basicBlocks, advancedBlocks } = defaultBlockTools();
     const mergedBasicBlocks = mergeArrays(basicBlocks, this.blockTools.filter(tool => basicBlocks.find(block => block.name === tool.name)));
@@ -273,6 +256,8 @@ export default {
       dragging: false,
       draggedNodePosition: null,
       editor: null,
+      blocks: [],  // Initialize blocks data
+      activeBlock: null,  // Active block for displaying the bubble menu
       allBlockTools: [...mergedBasicBlocks, ...mergedAdvancedBlocks],
       allInlineTools: mergeArrays(defaultInlineTools(), this.inlineTools),
       allAlignmentTools: this.alignmentTools.length
@@ -365,6 +350,7 @@ export default {
             ? this.editor.getJSON().content
             : this.editor.getHTML()
         );
+        this.updateBlocks();  // Call the method to update blocks
       },
 
       onSelectionUpdate: () => {
@@ -383,6 +369,7 @@ export default {
     );
 
     this.editor.setEditable(this.editable);
+
   },
 
   beforeUnmount() {
@@ -395,6 +382,11 @@ export default {
     },
     editable() {
       this.editor.setEditable(this.editable);
+    },
+    modelValue() {
+      this.$nextTick(() => {
+        this.updateBlocks();
+      });
     },
   },
 
@@ -502,6 +494,64 @@ export default {
     canMoveNodeUp() {
       const selectionStart = this.editor.view.state.selection.$from;
       return selectionStart.index(0) > 0;
+    },
+    updateBlocks() {
+      const blocks = [];
+      const doc = this.editor.state.doc;
+
+      // Create a mapping of block names to their definitions
+      const blockDefinitions = [...this.basicBlocks, ...this.advancedBlocks].reduce((acc, block) => {
+        acc[block.name] = block;
+        return acc;
+      }, {});
+
+      doc.descendants((node, pos) => {
+        // Only include top-level blocks
+        if (this.editor.view.state.doc.resolve(pos).depth === 0) {
+          const coords = this.editor.view.coordsAtPos(pos);
+          const blockDef = blockDefinitions[node.type.name];
+          if (blockDef) {
+            blocks.push({
+              type: node.type.name,
+              position: pos,
+              top: coords.top,
+              left: coords.left,
+              icon: blockDef.icon,
+            });
+          }
+        }
+      });
+
+      this.blocks = blocks;
+      
+    },
+
+    selectBlock(block) {
+      this.activeBlock = block;
+      this.editor.commands.setTextSelection({ from: block.position, to: block.position });
+      this.editor.view.focus();
+    },
+
+    performAction(action, block) {
+      if (action === 'edit') {
+        this.selectBlock(block);
+      } else if (action === 'delete') {
+        this.editor.commands.deleteNode(block.position);
+      }
+      this.activeMenuIndex = null;
+    },
+
+    getBubbleMenuOptions() {
+      if (this.activeBlock) {
+        return {
+          placement: 'right',
+          getReferenceClientRect: () => {
+            const element = document.querySelector(`[data-block-id="${this.activeBlock.position}"]`);
+            return element.getBoundingClientRect();
+          },
+        };
+      }
+      return {};
     },
   },
 };
