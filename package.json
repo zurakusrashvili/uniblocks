@@ -1,6 +1,6 @@
 {
   "name": "uniblocks",
-  "version": "0.1.90",
+  "version": "1.0.0",
   "private": false,
   "type": "module",
   "files": [
@@ -8,16 +8,6 @@
     "dist",
     "tailwind.config.cjs"
   ],
-  "exports": {
-    ".": {
-      "import": "./lib/guten-tap.js",
-      "require": "./lib/guten-tap.umd.cjs"
-    },
-    "./style.css": {
-      "import": "./lib/style.css",
-      "require": "./lib/style.css"
-    }
-  },
   "scripts": {
     "serve": "npx vite",
     "build": "npx vite build && npx vite build -c vite.demo.config.js",

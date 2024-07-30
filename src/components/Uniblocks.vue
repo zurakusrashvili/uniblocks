@@ -184,7 +184,16 @@ import defaultBlockTools from "../tools/block-tools";
 import defaultInlineTools from "../tools/inline-tools";
 import defaultAlignmentTools from "../tools/alignment-tools";
 import { tableRowTools, tableColumnTools } from "../tools/table-tools";
-import { CardsContainer, Card } from '../extensions/cards/CardsContainer'
+import {
+  Card,
+  InnerBlock,
+  PricingBlock,
+  TitleBlock,
+  InfoBlock,
+  FeaturesBlock,
+  FeatureItem,
+  ActionBlock, CardsContainer
+} from '../extensions/cards/CardsContainer'
 
 
 
@@ -229,10 +238,6 @@ export default {
     alignmentTools: {
       type: Array,
       default: () => [],
-    },
-    blockWidthTypes: {
-      type: Array,
-      default: () => ["horizontalRule", "blockquote", "youtube"],
     },
     variantsTypes: {
       type: Array,
@@ -312,7 +317,7 @@ export default {
           placeholder: this.placeholder,
         }),
         BlockWidth.configure({
-          types: this.blockWidthTypes,
+          // types: this.blockWidthTypes,
         }),
         Variants.configure({
           types: this.variantsTypes,
@@ -342,6 +347,13 @@ export default {
         }),
         Image,
         CardsContainer,
+        InnerBlock,
+        PricingBlock,
+        TitleBlock,
+        InfoBlock,
+        FeaturesBlock,
+        FeatureItem,
+        ActionBlock,
         Card,
         ...this.extensions,
       ],
@@ -413,20 +425,10 @@ export default {
       this.$nextTick(() => (this.isTyping = false));
     },
     logEditorValue() {
-      // this.editor.commands.setContent({
-      //   type: "doc",
-      //   content: [
-      //     {
-      //       type: "heading",
-      //       attrs: { level: 1 },
-      //       content: [{ type: "text", text: "New Heading" }]
-      //     },
-      //     {
-      //       type: "paragraph",
-      //       content: [{ type: "text", text: "New paragraph content" }]
-      //     }
-      //   ]
-      // });
+      this.editor.commands.setContent({
+        type: "doc",
+        content: this.editor.getJSON().content.slice(0, 5).reverse()
+      });
 
       console.log(this.editor.getJSON());
     },

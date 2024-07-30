@@ -47,45 +47,66 @@ export default function () {
       description: "A single card that can contain text or other elements within a cards container.",
       icon: "<i class='fas fa-square'></i>", // Example icon from FontAwesome for a card
       insertCommand: ({ editor, range }) => {
-        // Create a node content structure for 'card' that includes a paragraph
-        const cardContent = {
-          type: 'card', // This should be a node defined in your schema
+        editor.chain().focus().deleteRange(range).insertContent({
+          type: 'card',
           content: [{
-            type: 'paragraph', // Make sure 'card' can contain 'paragraph'
-            content: [{ type: 'text', text: 'New card content' }]
+            type: 'innerBlock',  // Ensure this is the only type within 'card'
+            content: [
+              { type: 'titleBlock', content: [{ type: 'text', text: 'Professional Plan' }] },
+              { type: 'pricingBlock', content: [{ type: 'text', text: '$49 / m' }] },
+              {
+                type: 'featuresBlock',
+                content: [
+                  { type: 'featureItem', content: [{ type: 'text', text: '20 team members' }] },
+                  { type: 'featureItem', content: [{ type: 'text', text: 'Plan team meetings' }] },
+                  { type: 'featureItem', content: [{ type: 'text', text: 'File sharing' }] }
+                ]
+              },
+              { type: 'actionBlock', content: [{ type: 'text', text: 'Choose plan' }] }
+            ]
           }]
-        };
-        // Delete the current range and insert the card node
-        editor.chain().focus().deleteRange(range).insertContent(cardContent).run();
+        }).run();
       },
       hasInlineTools: true,
       isActiveTest: (editor) => editor.isActive('card'),
     },
+
     {
       title: "Cards Container",
       name: "cardsContainer",
       description: "A container that holds individual cards for grouped content display.",
       icon: "<i class='fas fa-layer-group'></i>", // Example icon from FontAwesome for a container
       insertCommand: ({ editor, range }) => {
-        // Create a node content structure for 'cardsContainer' that includes a 'card'
+        const cards = [];
+        for (let i = 0; i < 3; i++) {
+          cards.push({
+            type: 'card',
+            content: [
+              {
+                type: 'image',
+                attrs: { src: prompt("Enter Src: ") }
+              },
+              {
+                type: 'paragraph',
+                content: [{ type: 'text', text: prompt("Enter Src: ") }]
+              }
+              // Add 'link' only if the schema allows at this location
+            ]
+          });
+        }
+
         const containerContent = {
-          type: 'cardsContainer', // This should be a node defined in your schema
-          content: [{
-            type: 'card', // Ensure 'cardsContainer' can contain 'card'
-            content: [{
-              type: 'paragraph',
-              content: [{ type: 'text', text: 'Card content goes here...' }]
-            }]
-          }]
+          type: 'cardsContainer',
+          content: cards
         };
-        // Delete the current range and insert the container with a card
+
         editor.chain().focus().deleteRange(range).insertContent(containerContent).run();
       },
       hasInlineTools: false, // Typically a container might not need inline tools
       isActiveTest: (editor) => editor.isActive('cardsContainer'),
     }
-,        
-    
+    ,
+
     {
       title: "List",
       name: "list",
