@@ -184,6 +184,8 @@ import defaultBlockTools from "../tools/block-tools";
 import defaultInlineTools from "../tools/inline-tools";
 import defaultAlignmentTools from "../tools/alignment-tools";
 import { tableRowTools, tableColumnTools } from "../tools/table-tools";
+import { CardsContainer, Card } from '../extensions/cards/CardsContainer'
+
 
 
 export default {
@@ -339,6 +341,8 @@ export default {
           },
         }),
         Image,
+        CardsContainer,
+        Card,
         ...this.extensions,
       ],
 

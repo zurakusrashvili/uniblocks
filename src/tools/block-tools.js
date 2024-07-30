@@ -42,6 +42,51 @@ export default function () {
       isActiveTest: (editor) => editor.isActive("table"),
     },
     {
+      title: "Card",
+      name: "card",
+      description: "A single card that can contain text or other elements within a cards container.",
+      icon: "<i class='fas fa-square'></i>", // Example icon from FontAwesome for a card
+      insertCommand: ({ editor, range }) => {
+        // Create a node content structure for 'card' that includes a paragraph
+        const cardContent = {
+          type: 'card', // This should be a node defined in your schema
+          content: [{
+            type: 'paragraph', // Make sure 'card' can contain 'paragraph'
+            content: [{ type: 'text', text: 'New card content' }]
+          }]
+        };
+        // Delete the current range and insert the card node
+        editor.chain().focus().deleteRange(range).insertContent(cardContent).run();
+      },
+      hasInlineTools: true,
+      isActiveTest: (editor) => editor.isActive('card'),
+    },
+    {
+      title: "Cards Container",
+      name: "cardsContainer",
+      description: "A container that holds individual cards for grouped content display.",
+      icon: "<i class='fas fa-layer-group'></i>", // Example icon from FontAwesome for a container
+      insertCommand: ({ editor, range }) => {
+        // Create a node content structure for 'cardsContainer' that includes a 'card'
+        const containerContent = {
+          type: 'cardsContainer', // This should be a node defined in your schema
+          content: [{
+            type: 'card', // Ensure 'cardsContainer' can contain 'card'
+            content: [{
+              type: 'paragraph',
+              content: [{ type: 'text', text: 'Card content goes here...' }]
+            }]
+          }]
+        };
+        // Delete the current range and insert the container with a card
+        editor.chain().focus().deleteRange(range).insertContent(containerContent).run();
+      },
+      hasInlineTools: false, // Typically a container might not need inline tools
+      isActiveTest: (editor) => editor.isActive('cardsContainer'),
+    }
+,        
+    
+    {
       title: "List",
       name: "list",
       description: "Simple lists (enumerated, itemized, etc.)",
