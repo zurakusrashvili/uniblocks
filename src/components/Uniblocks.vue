@@ -1,7 +1,7 @@
 <template>
   <div class="uniblocks">
     <bubble-menu v-if="editor && tableRowTools" :editor="editor" pluginKey="tableRowMenu" :should-show="tableIsActive"
-    :tippy-options="getBubbleMenuOptions">
+      :tippy-options="getBubbleMenuOptions">
       <menu-item>
         <menu-button title="Row tools" class="rounded-full text-slate-400 hover:text-slate-800"
           :content="moreIconRound" />
@@ -128,7 +128,7 @@
       </div>
     </bubble-menu>
 
-      <BlockSidebar :blocks="blocks" :editor="editor" @select-block="selectBlock" />
+    <BlockSidebar :blocks="blocks" :editor="editor" @select-block="selectBlock" />
 
     <editor-content :class="editorClass ?? 'prose'" @keydown="isTyping = true" @keyup.esc="isTyping = false"
       ref="editor" :editor="editor" />
@@ -409,6 +409,21 @@ export default {
       this.$nextTick(() => (this.isTyping = false));
     },
     logEditorValue() {
+      this.editor.commands.setContent({
+        type: "doc",
+        content: [
+          {
+            type: "heading",
+            attrs: { level: 1 },
+            content: [{ type: "text", text: "New Heading" }]
+          },
+          {
+            type: "paragraph",
+            content: [{ type: "text", text: "New paragraph content" }]
+          }
+        ]
+      });
+
       console.log(this.editor.getJSON());
     },
 
@@ -523,7 +538,7 @@ export default {
       });
 
       this.blocks = blocks;
-      
+
     },
 
     selectBlock(block) {
