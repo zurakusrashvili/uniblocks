@@ -49,6 +49,7 @@
 
 .cards-container {
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
   padding: 8px;
@@ -71,7 +72,7 @@
   padding: 10px;
   background-color: #fff;
   color: #697e91;
-  max-width: 300px !important;
+  width: 400px !important;
 }
 
 .plan strong {

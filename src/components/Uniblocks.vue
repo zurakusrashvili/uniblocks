@@ -425,13 +425,25 @@ export default {
       this.$nextTick(() => (this.isTyping = false));
     },
     logEditorValue() {
-      this.editor.commands.setContent({
-        type: "doc",
-        content: this.editor.getJSON().content.slice(0, 5).reverse()
-      });
+      const content = this.editor.getJSON();
 
-      console.log(this.editor.getJSON());
+      const beautifiedJson = JSON.stringify(content, null, 2); 
+
+      const blob = new Blob([beautifiedJson], { type: 'application/json' });
+
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'editor-content.json'; 
+      document.body.appendChild(a); 
+      a.click();
+      document.body.removeChild(a); 
+
+ 
+      console.log(beautifiedJson);
     },
+
 
     shouldShowMainToolbar() {
       return this.editable && this.editor.isActive() && this.modelValue;

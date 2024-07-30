@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import uniblocks from "./components/uniblocks.vue";
+import uniblocks from "./components/Uniblocks.vue";
 import sampleContent from "./content.json";
 import VueComponent from "./extensions/vue-component";
 import TopMenu from "./components/TopMenu.vue";

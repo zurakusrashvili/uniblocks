@@ -77,35 +77,79 @@ export default function () {
       description: "A container that holds individual cards for grouped content display.",
       icon: "<i class='fas fa-layer-group'></i>", // Example icon from FontAwesome for a container
       insertCommand: ({ editor, range }) => {
-        const cards = [];
-        for (let i = 0; i < 3; i++) {
-          cards.push({
+        // Array to hold the content of three cards
+        const cards = [
+          {
             type: 'card',
-            content: [
-              {
-                type: 'image',
-                attrs: { src: prompt("Enter Src: ") }
-              },
-              {
-                type: 'paragraph',
-                content: [{ type: 'text', text: prompt("Enter Src: ") }]
-              }
-              // Add 'link' only if the schema allows at this location
-            ]
-          });
-        }
+            content: [{
+              type: 'innerBlock',  // Ensure this is the only type within 'card'
+              content: [
+                { type: 'titleBlock', content: [{ type: 'text', text: 'Professional Plan' }] },
+                { type: 'pricingBlock', content: [{ type: 'text', text: '$49 / m' }] },
+                {
+                  type: 'featuresBlock',
+                  content: [
+                    { type: 'featureItem', content: [{ type: 'text', text: '20 team members' }] },
+                    { type: 'featureItem', content: [{ type: 'text', text: 'Plan team meetings' }] },
+                    { type: 'featureItem', content: [{ type: 'text', text: 'File sharing' }] }
+                  ]
+                },
+                { type: 'actionBlock', content: [{ type: 'text', text: 'Choose plan' }] }
+              ]
+            }]
+          },
+          {
+            type: 'card',
+            content: [{
+              type: 'innerBlock',  // Ensure this is the only type within 'card'
+              content: [
+                { type: 'titleBlock', content: [{ type: 'text', text: 'Professional Plan' }] },
+                { type: 'pricingBlock', content: [{ type: 'text', text: '$49 / m' }] },
+                {
+                  type: 'featuresBlock',
+                  content: [
+                    { type: 'featureItem', content: [{ type: 'text', text: '20 team members' }] },
+                    { type: 'featureItem', content: [{ type: 'text', text: 'Plan team meetings' }] },
+                    { type: 'featureItem', content: [{ type: 'text', text: 'File sharing' }] }
+                  ]
+                },
+                { type: 'actionBlock', content: [{ type: 'text', text: 'Choose plan' }] }
+              ]
+            }]
+          },
+          {
+            type: 'card',
+            content: [{
+              type: 'innerBlock',  // Ensure this is the only type within 'card'
+              content: [
+                { type: 'titleBlock', content: [{ type: 'text', text: 'Professional Plan' }] },
+                { type: 'pricingBlock', content: [{ type: 'text', text: '$49 / m' }] },
+                {
+                  type: 'featuresBlock',
+                  content: [
+                    { type: 'featureItem', content: [{ type: 'text', text: '20 team members' }] },
+                    { type: 'featureItem', content: [{ type: 'text', text: 'Plan team meetings' }] },
+                    { type: 'featureItem', content: [{ type: 'text', text: 'File sharing' }] }
+                  ]
+                },
+                { type: 'actionBlock', content: [{ type: 'text', text: 'Choose plan' }] }
+              ]
+            }]
+          }
+        ];
 
+        // Create the container content with the cards
         const containerContent = {
           type: 'cardsContainer',
           content: cards
         };
 
+        // Delete the current range and insert the container with the cards
         editor.chain().focus().deleteRange(range).insertContent(containerContent).run();
       },
-      hasInlineTools: false, // Typically a container might not need inline tools
+      hasInlineTools: true, // Typically a container might not need inline tools
       isActiveTest: (editor) => editor.isActive('cardsContainer'),
-    }
-    ,
+    },
 
     {
       title: "List",
