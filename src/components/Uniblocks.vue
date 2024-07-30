@@ -413,20 +413,20 @@ export default {
       this.$nextTick(() => (this.isTyping = false));
     },
     logEditorValue() {
-      this.editor.commands.setContent({
-        type: "doc",
-        content: [
-          {
-            type: "heading",
-            attrs: { level: 1 },
-            content: [{ type: "text", text: "New Heading" }]
-          },
-          {
-            type: "paragraph",
-            content: [{ type: "text", text: "New paragraph content" }]
-          }
-        ]
-      });
+      // this.editor.commands.setContent({
+      //   type: "doc",
+      //   content: [
+      //     {
+      //       type: "heading",
+      //       attrs: { level: 1 },
+      //       content: [{ type: "text", text: "New Heading" }]
+      //     },
+      //     {
+      //       type: "paragraph",
+      //       content: [{ type: "text", text: "New paragraph content" }]
+      //     }
+      //   ]
+      // });
 
       console.log(this.editor.getJSON());
     },
