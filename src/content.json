@@ -115,15 +115,18 @@
     "type": "horizontalRule"
   },
   {
-    "type": "paragraph",
+    "type": "youtube",
     "attrs": {
-      "blockWidth": "normal",
-      "textAlign": "left"
+      "blockWidth": "wide",
+      "src": "https://www.youtube.com/watch?v=VcnROkRhJ34",
+      "start": 0,
+      "width": 640,
+      "height": 480
     },
     "content": [
       {
         "type": "text",
-        "text": "Below is an embedded YouTube video demonstrating the Tiptap editor in action:"
+        "text": "YouTube embeds are wrapped in figure elements and can have a figcaption like this."
       }
     ]
   }
